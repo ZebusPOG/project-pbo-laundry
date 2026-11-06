@@ -2,7 +2,7 @@
 
 **Mata kuliah:** Praktikum Pemrograman Berbasis Objek
 **Tahap:** Minggu 1 (2 - 6 November 2026): ide proyek, gambaran aplikasi, rancangan database, rancangan class
-**Kelompok:** (isi nama anggota, NIM, kelas)
+**Kelompok:** 140810250004 - 140810250058 - 140810250100
 
 ---
 
