@@ -1,0 +1,9 @@
+{
+    // Tombol "Run Code" (Code Runner) untuk file Java di proyek ini:
+    // compile + jalankan seluruh proyek lewat Maven, bukan satu file saja.
+    "code-runner.executorMap": {
+        "java": "cd \"$workspaceRoot/laundry-design\" && mvn -q compile exec:java"
+    },
+    "code-runner.saveAllFilesBeforeRun": true,
+    "java.configuration.updateBuildConfiguration": "automatic"
+}

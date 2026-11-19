@@ -23,6 +23,7 @@ Aplikasi desktop berbasis **Java Swing** yang terhubung ke **database MySQL** (l
 2. Menghitung total biaya otomatis (berat x harga per kg).
 3. Memantau status cucian: Diproses, Selesai, Diambil.
 4. Menampilkan riwayat transaksi yang bisa dicari dan difilter.
+5. Mencetak nota transaksi sebagai bukti pengambilan cucian.
 
 ---
 
@@ -42,6 +43,7 @@ Aplikasi digunakan oleh **pemilik/kasir laundry** (satu jenis pengguna) untuk me
 | 5 | Ubah Status | Ubah status cucian: Diproses, Selesai, Diambil |
 | 6 | Batalkan Transaksi | Hapus transaksi yang salah input |
 | 7 | Ringkasan (opsional) | Total pemasukan dan jumlah cucian per status |
+| 8 | Cetak Nota | Pratinjau nota dari transaksi terpilih, lalu cetak ke printer atau simpan sebagai PDF |
 
 ### 2.3 Alur Penggunaan
 
@@ -53,6 +55,11 @@ Aplikasi digunakan oleh **pemilik/kasir laundry** (satu jenis pengguna) untuk me
 5. Kasir menekan **Simpan**. Transaksi tersimpan dengan status **Diproses** dan muncul di tabel riwayat.
 6. Ketika cucian selesai, kasir memilih baris transaksi lalu menekan **Tandai Selesai**.
 7. Ketika pelanggan mengambil cucian, kasir menekan **Tandai Diambil**.
+
+**Alur cetak nota:**
+1. Kasir memilih baris transaksi di tabel riwayat, lalu menekan **Cetak Nota**.
+2. Muncul jendela pratinjau nota (no. nota, tanggal, pelanggan, layanan, berat, harga, total, status).
+3. Kasir menekan **Cetak** untuk mencetak ke printer (atau *Save as PDF*), lalu nota diberikan ke pelanggan sebagai bukti pengambilan.
 
 **Alur kelola data master:**
 - Pilih menu Pelanggan/Layanan, lalu isi form dan tekan Simpan. Data muncul di `JTable`.
@@ -66,7 +73,8 @@ Aplikasi digunakan oleh **pemilik/kasir laundry** (satu jenis pengguna) untuk me
 | Jendela utama | `JFrame` + `JTabbedPane` (tab Pelanggan, Layanan, Transaksi) |
 | Tab Pelanggan | `JTextField` (nama, no HP), `JTextArea` (alamat), tombol Simpan/Ubah/Hapus/Reset, `JTextField` pencarian, `JTable` |
 | Tab Layanan | `JTextField` (nama layanan, harga per kg, estimasi hari), tombol Simpan/Ubah/Hapus/Reset, `JTable` |
-| Tab Transaksi | `JComboBox` pelanggan dan layanan, `JTextField` berat, label total, tombol Simpan, `JComboBox` filter status, tombol Tandai Selesai/Diambil/Batalkan, `JTable` riwayat |
+| Tab Transaksi | `JComboBox` pelanggan dan layanan, `JTextField` berat, label total, tombol Simpan, `JComboBox` filter status, tombol Tandai Selesai/Diambil/Batalkan/Cetak Nota, `JTable` riwayat |
+| Dialog Nota | `JDialog` + `JTextArea` (font monospace, read-only), tombol Cetak/Tutup |
 
 ---
 
@@ -188,7 +196,8 @@ laundry
     ├── BasePanel.java           (abstract class)
     ├── PelangganPanel.java
     ├── LayananPanel.java
-    └── TransaksiPanel.java
+    ├── TransaksiPanel.java
+    └── NotaDialog.java          (fitur Cetak Nota)
 ```
 
 ### 4.2 Daftar Class dan Tanggung Jawabnya
@@ -228,6 +237,7 @@ Catatan: `delete()` di `PelangganDAO` dan `LayananDAO` memeriksa dulu apakah dat
 | `PelangganPanel extends BasePanel` | Form dan tabel pelanggan, memakai `PelangganDAO` |
 | `LayananPanel extends BasePanel` | Form dan tabel layanan, memakai `LayananDAO` |
 | `TransaksiPanel extends BasePanel` | Form order, tabel riwayat, tombol ubah status, memakai `TransaksiDAO`, `PelangganDAO`, `LayananDAO` |
+| `NotaDialog extends JDialog` | Menyusun teks nota (`buatIsiNota()`), menampilkan pratinjau, dan mencetaknya lewat `JTextArea.print()` |
 
 ### 4.3 Hubungan Antar Class
 
@@ -235,6 +245,7 @@ Catatan: `delete()` di `PelangganDAO` dan `LayananDAO` memeriksa dulu apakah dat
 Main ──> MainFrame ──> PelangganPanel ──> PelangganDAO ──> Pelanggan
                   ├──> LayananPanel   ──> LayananDAO   ──> Layanan
                   └──> TransaksiPanel ──> TransaksiDAO ──> Transaksi ──> Pelanggan, Layanan, StatusTransaksi
+                             └──> NotaDialog
 
 PelangganDAO / LayananDAO / TransaksiDAO ──> DatabaseConnection
 ```
@@ -244,12 +255,12 @@ PelangganDAO / LayananDAO / TransaksiDAO ──> DatabaseConnection
 | Konsep | Penerapan |
 |--------|-----------|
 | Encapsulation | Atribut `private` pada class model dengan getter/setter |
-| Inheritance | `MainFrame extends JFrame`, `BasePanel extends JPanel`, panel lain `extends BasePanel` |
+| Inheritance | `MainFrame extends JFrame`, `NotaDialog extends JDialog`, `BasePanel extends JPanel`, panel lain `extends BasePanel` |
 | Abstraction | `BasePanel` (abstract class) dan `BaseDAO<T>` (interface) |
 | Polymorphism | Setiap DAO mengimplementasikan `BaseDAO` dengan cara berbeda; `toString()` pada model dipakai oleh `JComboBox` |
 | Association | `Transaksi` memiliki objek `Pelanggan` dan `Layanan` |
 | Enum | `StatusTransaksi` |
-| Exception handling | `SQLException` ditangani di DAO dan ditampilkan lewat `JOptionPane` di view |
+| Exception handling | `SQLException` ditangani di DAO dan ditampilkan lewat `JOptionPane` di view; `PrinterException` ditangani saat cetak nota |
 
 ---
 
