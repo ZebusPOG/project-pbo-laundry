@@ -1,6 +1,7 @@
 -- =============================================================
 -- Database Aplikasi Laundry Kiloan Jatinangor
--- Jalankan sekali sebelum membuka aplikasi, contoh:
+-- CATATAN: aplikasi sudah membuat database & tabel ini secara otomatis saat pertama dijalankan.
+-- File ini hanya cadangan jika ingin membuatnya manual, contoh:
 --   mysql -u root -p < database/db_laundry.sql
 -- (atau buka file ini di phpMyAdmin / MySQL Workbench lalu Execute)
 -- Aman dijalankan berulang: tabel dan data awal tidak dibuat dobel.

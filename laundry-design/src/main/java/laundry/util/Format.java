@@ -6,34 +6,38 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-/** Format tampilan tanggal dan berat, serta pembacaan angka dari input pengguna. */
-public final class Format {
+/** Format tampilan (Rupiah, tanggal, berat) dan pembacaan angka dari input. */
+public class Format {
 
-    private static final DateTimeFormatter TANGGAL = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DecimalFormat BERAT =
-            new DecimalFormat("#,##0.##", DecimalFormatSymbols.getInstance(Locale.forLanguageTag("id-ID")));
+    private static final Locale INDONESIA = Locale.forLanguageTag("id-ID");
 
-    private Format() {
+    /** 24500 -> "Rp 24.500" */
+    public static String rupiah(double nilai) {
+        return "Rp " + new DecimalFormat("#,##0", DecimalFormatSymbols.getInstance(INDONESIA)).format(nilai);
+    }
+
+    /** 3.5 -> "3,5" dan 4.0 -> "4" */
+    public static String berat(double kg) {
+        return new DecimalFormat("#,##0.##", DecimalFormatSymbols.getInstance(INDONESIA)).format(kg);
     }
 
     /** Contoh: 18/11/2026 */
     public static String tanggal(LocalDateTime waktu) {
-        return waktu == null ? "-" : waktu.format(TANGGAL);
+        return waktu.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
-    /** Contoh: 3.5 -> "3,5", 4.0 -> "4" */
-    public static String berat(double kg) {
-        return BERAT.format(kg);
+    /** Contoh: 18-11-2026 09:15 */
+    public static String tanggalJam(LocalDateTime waktu) {
+        return waktu.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
     }
 
-    /** Membaca nominal Rupiah dari input: "8000", "8.000", atau "Rp 8.000" -> 8000. */
-    public static double parseRupiah(String teks) {
-        String bersih = teks.trim().replaceAll("(?i)rp", "").replace(" ", "").replace(".", "").replace(",", ".");
-        return Double.parseDouble(bersih);
+    /** "8000", "8.000", atau "Rp 8.000" -> 8000 */
+    public static double bacaRupiah(String teks) {
+        return Double.parseDouble(teks.replaceAll("[^0-9,]", "").replace(",", "."));
     }
 
-    /** Membaca angka desimal dari input; koma boleh dipakai: "3,5" -> 3.5. */
-    public static double parseDesimal(String teks) {
+    /** "3,5" atau "3.5" -> 3.5 */
+    public static double bacaDesimal(String teks) {
         return Double.parseDouble(teks.trim().replace(",", "."));
     }
 }

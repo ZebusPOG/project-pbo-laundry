@@ -1,6 +1,6 @@
 package laundry.model;
 
-import laundry.util.Rupiah;
+import laundry.util.Format;
 
 /** Jenis layanan laundry beserta harga per kg. */
 public class Layanan {
@@ -38,6 +38,6 @@ public class Layanan {
     /** Teks yang tampil di JComboBox layanan. */
     @Override
     public String toString() {
-        return namaLayanan + " - " + Rupiah.format(hargaPerKg) + "/kg";
+        return namaLayanan + " - " + Format.rupiah(hargaPerKg) + "/kg";
     }
 }

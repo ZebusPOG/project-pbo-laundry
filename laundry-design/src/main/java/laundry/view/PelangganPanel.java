@@ -1,151 +1,44 @@
 package laundry.view;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.sql.SQLException;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import laundry.dao.PelangganDAO;
 import laundry.dao.TransaksiDAO;
 import laundry.model.Pelanggan;
-import laundry.view.komponen.AreaTeks;
-import laundry.view.komponen.FormField;
-import laundry.view.komponen.Ikon;
-import laundry.view.komponen.Kartu;
 
-/** Tab Pelanggan: tambah, ubah, hapus, dan cari data pelanggan. */
+/**
+ * Tab Pelanggan: tambah, ubah, hapus, dan cari data pelanggan.
+ * Susunan tampilan dibuat dengan GUI Builder NetBeans (klik tab "Design").
+ */
 public class PelangganPanel extends BasePanel {
 
     private final PelangganDAO pelangganDAO = new PelangganDAO();
     private final TransaksiDAO transaksiDAO = new TransaksiDAO();
-
-    private JTextField fieldNama;
-    private JTextField fieldNoHp;
-    private JTextArea txtAlamat;
-    private JTextField fieldCari;
-    private FormField fNama;
-    private FormField fNoHp;
-    private JButton btnSimpan;
-    private JButton btnUbah;
-    private JButton btnReset;
-    private JButton btnHapus;
-    private JTable tblPelanggan;
-
-    /** ID pelanggan yang sedang dipilih di tabel (-1 = belum ada). */
-    private int idTerpilih = -1;
+    private int idTerpilih = -1; // id pelanggan yang diklik di tabel (-1 = belum ada)
 
     public PelangganPanel() {
-        super("Data Pelanggan", "Kelola data pelanggan laundry");
         initComponents();
+        aturTampilan();
         loadData();
     }
 
-    @Override
-    protected void initComponents() {
-        // ----- Kartu form -----
-        fieldNama = Tema.input("Nama pelanggan");
-        fieldNoHp = Tema.input("08xx-xxxx-xxxx");
-        txtAlamat = new AreaTeks("Alamat atau nama kos", 2, 20);
-        txtAlamat.setLineWrap(true);
-        txtAlamat.setWrapStyleWord(true);
-        txtAlamat.setFont(Tema.font(Font.PLAIN, 15));
-        JScrollPane scrollAlamat = new JScrollPane(txtAlamat);
-        scrollAlamat.setPreferredSize(new Dimension(100, 84));
-
-        fNama = new FormField("Nama", true, fieldNama);
-        fNoHp = new FormField("No. HP", false, fieldNoHp);
-        FormField fAlamat = new FormField("Alamat / Kos", false, txtAlamat, scrollAlamat);
-
-        btnSimpan = Tema.tombolPrimer("Simpan");
-        btnUbah = Tema.tombolSekunder("Ubah");
-        btnReset = Tema.tombolTeks("Reset");
-        btnHapus = Tema.tombolBahaya("Hapus");
-
-        JPanel barisTombol = new JPanel();
-        barisTombol.setOpaque(false);
-        barisTombol.setLayout(new BoxLayout(barisTombol, BoxLayout.X_AXIS));
-        barisTombol.add(btnSimpan);
-        barisTombol.add(Box.createHorizontalStrut(12));
-        barisTombol.add(btnUbah);
-        barisTombol.add(Box.createHorizontalStrut(12));
-        barisTombol.add(btnReset);
-        barisTombol.add(Box.createHorizontalStrut(16));
-        barisTombol.add(labelSukses());
-        barisTombol.add(Box.createHorizontalGlue());
-        barisTombol.add(btnHapus);
-
-        Kartu kartuForm = new Kartu(new GridBagLayout());
-        GridBagConstraints g = new GridBagConstraints();
-        g.fill = GridBagConstraints.HORIZONTAL;
-        g.anchor = GridBagConstraints.NORTH;
-        g.gridy = 0;
-        g.weightx = 0.5;
-        g.gridx = 0;
-        g.insets = new Insets(0, 0, 0, 14);
-        kartuForm.add(fNama, g);
-        g.gridx = 1;
-        g.insets = new Insets(0, 14, 0, 0);
-        kartuForm.add(fNoHp, g);
-        g.gridx = 0;
-        g.gridy = 1;
-        g.gridwidth = 2;
-        g.weightx = 1;
-        g.insets = new Insets(18, 0, 0, 0);
-        kartuForm.add(fAlamat, g);
-        g.gridy = 2;
-        g.insets = new Insets(18, 0, 0, 0);
-        kartuForm.add(barisTombol, g);
-
-        // ----- Kartu tabel -----
-        fieldCari = Tema.input("Cari nama");
-        fieldCari.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, Ikon.CARI);
-        fieldCari.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-        fieldCari.setPreferredSize(new Dimension(300, Tema.TINGGI_INPUT));
-
-        JPanel atasTabel = new JPanel(new BorderLayout());
-        atasTabel.setOpaque(false);
-        atasTabel.add(Tema.judulKartu("Daftar pelanggan"), BorderLayout.WEST);
-        atasTabel.add(fieldCari, BorderLayout.EAST);
-
-        tblPelanggan = Tema.tabel("ID", "Nama", "No. HP", "Alamat");
-        Tema.aturKolom(tblPelanggan, new int[]{60, 220, 200, 360});
-
-        Kartu kartuTabel = new Kartu(new BorderLayout(0, 18));
-        kartuTabel.add(atasTabel, BorderLayout.NORTH);
-        kartuTabel.add(Tema.bungkusTabel(tblPelanggan), BorderLayout.CENTER);
-
-        setIsi(kartuForm, kartuTabel);
-
-        // ----- Event -----
-        btnSimpan.addActionListener(evt -> simpan());
-        btnUbah.addActionListener(evt -> ubah());
-        btnReset.addActionListener(evt -> resetForm());
-        btnHapus.addActionListener(evt -> hapus());
-        tblPelanggan.getSelectionModel().addListSelectionListener(evt -> {
-            if (!evt.getValueIsAdjusting()) {
-                pilihBaris();
-            }
-        });
-        fieldCari.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e) { loadData(); }
-            @Override public void removeUpdate(DocumentEvent e) { loadData(); }
-            @Override public void changedUpdate(DocumentEvent e) { loadData(); }
-        });
+    /** Mengatur gaya komponen agar sesuai file desain. */
+    private void aturTampilan() {
+        Tema.judul(lblJudul, lblSubjudul);
+        Tema.label(lblNama, lblNoHp, lblAlamat);
+        Tema.labelPesan(lblSukses, lblErrorNama, lblErrorNoHp);
+        Tema.input(txtNama, "Nama pelanggan");
+        Tema.input(txtNoHp, "08xx-xxxx-xxxx");
+        Tema.input(txtCari, "Cari nama");
+        txtCari.setPreferredSize(new java.awt.Dimension(300, Tema.TINGGI));
+        Tema.tombolPrimer(btnSimpan);
+        Tema.tombolSekunder(btnUbah);
+        Tema.tombolTeks(btnReset);
+        Tema.tombolBahaya(btnHapus);
+        Tema.judulKartu(lblDaftar);
+        Tema.tabel(tblPelanggan, scrollTabel);
+        Tema.lebarKolom(tblPelanggan, 60, 220, 200, 360);
     }
 
     @Override
@@ -153,74 +46,289 @@ public class PelangganPanel extends BasePanel {
         DefaultTableModel model = (DefaultTableModel) tblPelanggan.getModel();
         model.setRowCount(0);
         try {
-            String keyword = fieldCari.getText().trim();
-            List<Pelanggan> data = keyword.isEmpty() ? pelangganDAO.findAll() : pelangganDAO.cari(keyword);
+            String cari = txtCari.getText().trim();
+            List<Pelanggan> data = cari.isEmpty() ? pelangganDAO.findAll() : pelangganDAO.cari(cari);
             for (Pelanggan p : data) {
                 model.addRow(new Object[]{p.getIdPelanggan(), p.getNama(), p.getNoHp(), p.getAlamat()});
             }
         } catch (SQLException ex) {
-            errorDatabase("memuat data pelanggan", ex);
+            showErrorDatabase("memuat data pelanggan", ex);
         }
     }
 
-    /** Memeriksa isi form; menandai isian yang salah dan mengembalikan false jika ada. */
+    @Override
+    protected void resetForm() {
+        txtNama.setText("");
+        txtNoHp.setText("");
+        txtAlamat.setText("");
+        hapusError(txtNama, lblErrorNama);
+        hapusError(txtNoHp, lblErrorNoHp);
+        idTerpilih = -1;
+        tblPelanggan.clearSelection();
+    }
+
+    /** Memeriksa isi form; isian yang salah diberi garis merah dan pesan. */
     private boolean inputValid() {
+        hapusError(txtNama, lblErrorNama);
+        hapusError(txtNoHp, lblErrorNoHp);
         boolean valid = true;
-        String noHp = fieldNoHp.getText().trim();
-        if (!noHp.isEmpty()) {
-            String digit = noHp.replaceAll("[\\s-]", "");
-            if (!digit.matches("\\+?[0-9]{8,15}")) {
-                fNoHp.error("No. HP hanya angka, contoh: 0812-3456-7890");
-                fieldNoHp.requestFocus();
-                valid = false;
-            }
+        if (txtNama.getText().trim().isEmpty()) {
+            tandaiError(txtNama, lblErrorNama, "Nama wajib diisi");
+            valid = false;
         }
-        if (fieldNama.getText().trim().isEmpty()) {
-            fNama.error("Nama wajib diisi");
-            fieldNama.requestFocus();
+        String noHp = txtNoHp.getText().replace("-", "").replace(" ", "");
+        if (!noHp.isEmpty() && !noHp.matches("\\+?[0-9]{8,15}")) {
+            tandaiError(txtNoHp, lblErrorNoHp, "No. HP hanya angka, contoh: 0812-3456-7890");
             valid = false;
         }
         return valid;
     }
 
-    /** Tombol Simpan: simpan sebagai pelanggan baru. */
-    private void simpan() {
+    /** Membuat objek Pelanggan dari isi form. */
+    private Pelanggan bacaForm() {
+        return new Pelanggan(txtNama.getText().trim(), txtNoHp.getText().trim(), txtAlamat.getText().trim());
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        panelHeader = new javax.swing.JPanel();
+        lblJudul = new javax.swing.JLabel();
+        lblSubjudul = new javax.swing.JLabel();
+        panelIsi = new javax.swing.JPanel();
+        panelForm = new javax.swing.JPanel();
+        lblNama = new javax.swing.JLabel();
+        lblNoHp = new javax.swing.JLabel();
+        txtNama = new javax.swing.JTextField();
+        txtNoHp = new javax.swing.JTextField();
+        lblErrorNama = new javax.swing.JLabel();
+        lblErrorNoHp = new javax.swing.JLabel();
+        lblAlamat = new javax.swing.JLabel();
+        scrollAlamat = new javax.swing.JScrollPane();
+        txtAlamat = new javax.swing.JTextArea();
+        panelTombol = new javax.swing.JPanel();
+        btnSimpan = new javax.swing.JButton();
+        btnUbah = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
+        lblSukses = new javax.swing.JLabel();
+        btnHapus = new javax.swing.JButton();
+        panelTabel = new javax.swing.JPanel();
+        panelAtasTabel = new javax.swing.JPanel();
+        lblDaftar = new javax.swing.JLabel();
+        txtCari = new javax.swing.JTextField();
+        scrollTabel = new javax.swing.JScrollPane();
+        tblPelanggan = new javax.swing.JTable();
+
+        setBackground(new java.awt.Color(241, 245, 246));
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(26, 28, 28, 28));
+        setLayout(new java.awt.BorderLayout(0, 24));
+        panelHeader.setOpaque(false);
+        panelHeader.setLayout(new java.awt.BorderLayout(0, 6));
+        lblJudul.setText("Data Pelanggan");
+        panelHeader.add(lblJudul, java.awt.BorderLayout.NORTH);
+
+        lblSubjudul.setText("Kelola data pelanggan laundry");
+        panelHeader.add(lblSubjudul, java.awt.BorderLayout.CENTER);
+
+        add(panelHeader, java.awt.BorderLayout.NORTH);
+
+        panelIsi.setOpaque(false);
+        panelIsi.setLayout(new java.awt.BorderLayout(0, 22));
+        panelForm.setBackground(new java.awt.Color(255, 255, 255));
+        panelForm.setBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(221, 227, 230), 1, true), javax.swing.BorderFactory.createEmptyBorder(24, 24, 24, 24)));
+        panelForm.setLayout(new java.awt.GridBagLayout());
+        lblNama.setText("<html>Nama <font color='#A8321E'>*</font></html>");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 8, 14);
+        panelForm.add(lblNama, gridBagConstraints);
+
+        lblNoHp.setText("No. HP");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 14, 8, 0);
+        panelForm.add(lblNoHp, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
+        panelForm.add(txtNama, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 14, 0, 0);
+        panelForm.add(txtNoHp, gridBagConstraints);
+
+        lblErrorNama.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 14);
+        panelForm.add(lblErrorNama, gridBagConstraints);
+
+        lblErrorNoHp.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 14, 0, 0);
+        panelForm.add(lblErrorNoHp, gridBagConstraints);
+
+        lblAlamat.setText("Alamat / Kos");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 0, 8, 0);
+        panelForm.add(lblAlamat, gridBagConstraints);
+
+        txtAlamat.setColumns(20);
+        txtAlamat.setLineWrap(true);
+        txtAlamat.setRows(2);
+        txtAlamat.setWrapStyleWord(true);
+        scrollAlamat.setViewportView(txtAlamat);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        panelForm.add(scrollAlamat, gridBagConstraints);
+
+        panelTombol.setOpaque(false);
+        panelTombol.setLayout(new java.awt.GridBagLayout());
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(this::btnSimpanActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        panelTombol.add(btnSimpan, gridBagConstraints);
+
+        btnUbah.setText("Ubah");
+        btnUbah.addActionListener(this::btnUbahActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+        panelTombol.add(btnUbah, gridBagConstraints);
+
+        btnReset.setText("Reset");
+        btnReset.addActionListener(this::btnResetActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
+        panelTombol.add(btnReset, gridBagConstraints);
+
+        lblSukses.setText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 16, 0, 0);
+        panelTombol.add(lblSukses, gridBagConstraints);
+
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(this::btnHapusActionPerformed);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        panelTombol.add(btnHapus, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(18, 0, 0, 0);
+        panelForm.add(panelTombol, gridBagConstraints);
+
+        panelIsi.add(panelForm, java.awt.BorderLayout.NORTH);
+
+        panelTabel.setBackground(new java.awt.Color(255, 255, 255));
+        panelTabel.setBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(221, 227, 230), 1, true), javax.swing.BorderFactory.createEmptyBorder(24, 24, 24, 24)));
+        panelTabel.setLayout(new java.awt.BorderLayout(0, 18));
+        panelAtasTabel.setOpaque(false);
+        panelAtasTabel.setLayout(new java.awt.BorderLayout(0, 0));
+        lblDaftar.setText("Daftar pelanggan");
+        panelAtasTabel.add(lblDaftar, java.awt.BorderLayout.WEST);
+
+        txtCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariKeyReleased(evt);
+            }
+        });
+        panelAtasTabel.add(txtCari, java.awt.BorderLayout.EAST);
+
+        panelTabel.add(panelAtasTabel, java.awt.BorderLayout.NORTH);
+
+        tblPelanggan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nama", "No. HP", "Alamat"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPelangganMouseClicked(evt);
+            }
+        });
+        scrollTabel.setViewportView(tblPelanggan);
+
+        panelTabel.add(scrollTabel, java.awt.BorderLayout.CENTER);
+
+        panelIsi.add(panelTabel, java.awt.BorderLayout.CENTER);
+
+        add(panelIsi, java.awt.BorderLayout.CENTER);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         if (!inputValid()) {
             return;
         }
         try {
-            pelangganDAO.insert(new Pelanggan(fieldNama.getText().trim(), fieldNoHp.getText().trim(),
-                    txtAlamat.getText().trim()));
+            pelangganDAO.insert(bacaForm());
             loadData();
             resetForm();
-            tampilkanSukses("Data tersimpan");
+            tampilkanSukses(lblSukses, "Data tersimpan");
         } catch (SQLException ex) {
-            errorDatabase("menyimpan pelanggan", ex);
+            showErrorDatabase("menyimpan pelanggan", ex);
         }
-    }
+    }//GEN-LAST:event_btnSimpanActionPerformed
 
-    /** Klik baris tabel: muat data pelanggan tersebut ke form. */
-    private void pilihBaris() {
-        int baris = tblPelanggan.getSelectedRow();
-        if (baris < 0) {
-            return;
-        }
-        int id = (Integer) tblPelanggan.getModel().getValueAt(tblPelanggan.convertRowIndexToModel(baris), 0);
-        try {
-            Pelanggan p = pelangganDAO.findById(id);
-            if (p != null) {
-                idTerpilih = id;
-                fieldNama.setText(p.getNama());
-                fieldNoHp.setText(p.getNoHp());
-                txtAlamat.setText(p.getAlamat());
-            }
-        } catch (SQLException ex) {
-            errorDatabase("memuat pelanggan", ex);
-        }
-    }
-
-    /** Tombol Ubah: simpan perubahan data pelanggan yang dipilih. */
-    private void ubah() {
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         if (idTerpilih < 0) {
             showPeringatan("Klik dulu data pelanggan di tabel yang ingin diubah.");
             return;
@@ -229,51 +337,89 @@ public class PelangganPanel extends BasePanel {
             return;
         }
         try {
-            Pelanggan p = new Pelanggan(fieldNama.getText().trim(), fieldNoHp.getText().trim(), txtAlamat.getText().trim());
+            Pelanggan p = bacaForm();
             p.setIdPelanggan(idTerpilih);
             pelangganDAO.update(p);
             loadData();
             resetForm();
-            tampilkanSukses("Perubahan tersimpan");
+            tampilkanSukses(lblSukses, "Perubahan tersimpan");
         } catch (SQLException ex) {
-            errorDatabase("mengubah pelanggan", ex);
+            showErrorDatabase("mengubah pelanggan", ex);
         }
-    }
+    }//GEN-LAST:event_btnUbahActionPerformed
 
-    /** Tombol Hapus: konfirmasi, lalu hapus (atau nonaktifkan jika sudah punya transaksi). */
-    private void hapus() {
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        resetForm();
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         if (idTerpilih < 0) {
             showPeringatan("Klik dulu data pelanggan di tabel yang ingin dihapus.");
             return;
         }
+        if (!konfirmasi("Hapus pelanggan \"" + txtNama.getText() + "\"?")) {
+            return;
+        }
         try {
-            Pelanggan p = pelangganDAO.findById(idTerpilih);
-            if (p == null || !konfirmasi("Konfirmasi Hapus", "Hapus pelanggan \"" + p.getNama() + "\"?")) {
-                return;
-            }
-            boolean punyaTransaksi = transaksiDAO.adaPelanggan(p.getIdPelanggan());
-            pelangganDAO.delete(p.getIdPelanggan());
+            // pelanggan yang sudah punya transaksi hanya dinonaktifkan (lihat PelangganDAO.delete)
+            boolean punyaTransaksi = transaksiDAO.adaPelanggan(idTerpilih);
+            pelangganDAO.delete(idTerpilih);
             loadData();
             resetForm();
             if (punyaTransaksi) {
-                showInfo("Pelanggan sudah punya transaksi, jadi dinonaktifkan.\nRiwayat transaksinya tetap tersimpan.");
+                showInfo("Pelanggan sudah punya transaksi, jadi hanya dinonaktifkan.\nRiwayat transaksinya tetap tersimpan.");
             } else {
-                tampilkanSukses("Data dihapus");
+                tampilkanSukses(lblSukses, "Data dihapus");
             }
         } catch (SQLException ex) {
-            errorDatabase("menghapus pelanggan", ex);
+            showErrorDatabase("menghapus pelanggan", ex);
         }
-    }
+    }//GEN-LAST:event_btnHapusActionPerformed
 
-    @Override
-    protected void resetForm() {
-        fieldNama.setText("");
-        fieldNoHp.setText("");
-        txtAlamat.setText("");
-        fNama.bersihkan();
-        fNoHp.bersihkan();
-        idTerpilih = -1;
-        tblPelanggan.clearSelection();
-        fieldNama.requestFocusInWindow();
-    }
+    private void txtCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariKeyReleased
+        loadData(); // pencarian langsung saat mengetik
+    }//GEN-LAST:event_txtCariKeyReleased
+
+    private void tblPelangganMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPelangganMouseClicked
+        // klik baris tabel: tampilkan datanya di form untuk diubah/dihapus
+        int baris = tblPelanggan.getSelectedRow();
+        if (baris < 0) {
+            return;
+        }
+        idTerpilih = (int) tblPelanggan.getValueAt(baris, 0);
+        txtNama.setText((String) tblPelanggan.getValueAt(baris, 1));
+        txtNoHp.setText((String) tblPelanggan.getValueAt(baris, 2));
+        txtAlamat.setText((String) tblPelanggan.getValueAt(baris, 3));
+        hapusError(txtNama, lblErrorNama);
+        hapusError(txtNoHp, lblErrorNoHp);
+    }//GEN-LAST:event_tblPelangganMouseClicked
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnReset;
+    private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnUbah;
+    private javax.swing.JLabel lblAlamat;
+    private javax.swing.JLabel lblDaftar;
+    private javax.swing.JLabel lblErrorNama;
+    private javax.swing.JLabel lblErrorNoHp;
+    private javax.swing.JLabel lblJudul;
+    private javax.swing.JLabel lblNama;
+    private javax.swing.JLabel lblNoHp;
+    private javax.swing.JLabel lblSubjudul;
+    private javax.swing.JLabel lblSukses;
+    private javax.swing.JPanel panelAtasTabel;
+    private javax.swing.JPanel panelForm;
+    private javax.swing.JPanel panelHeader;
+    private javax.swing.JPanel panelIsi;
+    private javax.swing.JPanel panelTabel;
+    private javax.swing.JPanel panelTombol;
+    private javax.swing.JScrollPane scrollAlamat;
+    private javax.swing.JScrollPane scrollTabel;
+    private javax.swing.JTable tblPelanggan;
+    private javax.swing.JTextArea txtAlamat;
+    private javax.swing.JTextField txtCari;
+    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtNoHp;
+    // End of variables declaration//GEN-END:variables
 }
