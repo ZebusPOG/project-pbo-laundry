@@ -2,6 +2,9 @@
 
 Aplikasi desktop Java Swing + MySQL untuk mencatat pelanggan, layanan, dan transaksi laundry.
 
+**Mata kuliah:** Praktikum Pemrograman Berbasis Objek
+**Kelompok:** 140810250004 - 140810250058 - 140810250100
+
 ## Cara menjalankan di NetBeans
 
 1. **Nyalakan MySQL** (XAMPP, MAMP, atau Homebrew).
