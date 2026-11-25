@@ -65,7 +65,7 @@ Database bernama **`db_laundry`** dan terdiri dari **3 tabel**: `pelanggan`, `la
 
 Keterangan notasi: **PK** = Primary Key, **FK** = Foreign Key. Pada garis relasi, tanda garis tegak **|** berarti *satu (one)* dan tanda bercabang tiga (*crow's foot*) berarti *banyak (many)*.
 
-> File diagram dibuat dengan **draw.io**: [`docs/erd-db_laundry.drawio`](docs/erd-db_laundry.drawio). Buka di aplikasi draw.io atau [app.diagrams.net](https://app.diagrams.net) untuk mengedit atau mengekspor ke PNG/PDF.
+> File diagram dibuat dengan **draw.io**: [`docs/erd-db_laundry.drawio`](docs/erd-db_laundry.drawio).
 
 ### Relasi
 
