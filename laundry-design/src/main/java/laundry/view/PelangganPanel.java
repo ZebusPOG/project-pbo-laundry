@@ -27,21 +27,16 @@ public class PelangganPanel extends BasePanel {
         }
     }
 
-    /** Mengatur gaya komponen agar sesuai file desain. */
+    /** Pengaturan yang tidak bisa dibuat di tab Design (teks contoh, garis tombol, judul tabel).
+     *  Warna, font, dan ukuran diatur di tab Design -> jendela Properties. */
     private void aturTampilan() {
-        Tema.judul(lblJudul, lblSubjudul);
-        Tema.label(lblNama, lblNoHp, lblAlamat);
-        Tema.labelPesan(lblSukses, lblErrorNama, lblErrorNoHp);
-        Tema.input(txtNama, "Nama pelanggan");
-        Tema.input(txtNoHp, "08xx-xxxx-xxxx");
-        Tema.input(txtCari, "Cari nama");
-        txtCari.setPreferredSize(new java.awt.Dimension(300, Tema.TINGGI));
+        Tema.placeholder(txtNama, "Nama pelanggan");
+        Tema.placeholder(txtNoHp, "08xx-xxxx-xxxx");
+        Tema.placeholder(txtCari, "Cari nama");
         Tema.tombolPrimer(btnSimpan);
         Tema.tombolSekunder(btnUbah);
-        Tema.tombolTeks(btnReset);
         Tema.tombolBahaya(btnHapus);
-        Tema.judulKartu(lblDaftar);
-        Tema.tabel(tblPelanggan, scrollTabel);
+        Tema.tabel(tblPelanggan);
         Tema.lebarKolom(tblPelanggan, 60, 220, 200, 360);
     }
 
@@ -101,7 +96,6 @@ public class PelangganPanel extends BasePanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         java.awt.GridBagConstraints gridBagConstraints;
 
         panelHeader = new javax.swing.JPanel();
@@ -133,23 +127,34 @@ public class PelangganPanel extends BasePanel {
 
         setBackground(new java.awt.Color(241, 245, 246));
         setBorder(javax.swing.BorderFactory.createEmptyBorder(26, 28, 28, 28));
-        setLayout(new java.awt.BorderLayout(0, 24));
+        setPreferredSize(new java.awt.Dimension(1000, 760));
+        setLayout(new java.awt.BorderLayout());
+
         panelHeader.setOpaque(false);
-        panelHeader.setLayout(new java.awt.BorderLayout(0, 6));
+        panelHeader.setLayout(new java.awt.BorderLayout());
+
         lblJudul.setText("Data Pelanggan");
+        lblJudul.setFont(lblJudul.getFont().deriveFont(lblJudul.getFont().getStyle() | java.awt.Font.BOLD, lblJudul.getFont().getSize()+14));
+        lblJudul.setForeground(new java.awt.Color(30, 42, 49));
         panelHeader.add(lblJudul, java.awt.BorderLayout.NORTH);
 
         lblSubjudul.setText("Kelola data pelanggan laundry");
+        lblSubjudul.setFont(lblSubjudul.getFont().deriveFont(lblSubjudul.getFont().getSize()+1f));
+        lblSubjudul.setForeground(new java.awt.Color(74, 86, 93));
         panelHeader.add(lblSubjudul, java.awt.BorderLayout.CENTER);
 
         add(panelHeader, java.awt.BorderLayout.NORTH);
 
         panelIsi.setOpaque(false);
-        panelIsi.setLayout(new java.awt.BorderLayout(0, 22));
+        panelIsi.setLayout(new java.awt.BorderLayout());
+
         panelForm.setBackground(new java.awt.Color(255, 255, 255));
         panelForm.setBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(221, 227, 230), 1, true), javax.swing.BorderFactory.createEmptyBorder(24, 24, 24, 24)));
         panelForm.setLayout(new java.awt.GridBagLayout());
+
         lblNama.setText("<html>Nama <font color='#A8321E'>*</font></html>");
+        lblNama.setFont(lblNama.getFont().deriveFont(lblNama.getFont().getStyle() | java.awt.Font.BOLD));
+        lblNama.setForeground(new java.awt.Color(74, 86, 93));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -158,6 +163,8 @@ public class PelangganPanel extends BasePanel {
         panelForm.add(lblNama, gridBagConstraints);
 
         lblNoHp.setText("No. HP");
+        lblNoHp.setFont(lblNoHp.getFont().deriveFont(lblNoHp.getFont().getStyle() | java.awt.Font.BOLD));
+        lblNoHp.setForeground(new java.awt.Color(74, 86, 93));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -165,6 +172,7 @@ public class PelangganPanel extends BasePanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 14, 8, 0);
         panelForm.add(lblNoHp, gridBagConstraints);
 
+        txtNama.setPreferredSize(new java.awt.Dimension(120, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -173,6 +181,7 @@ public class PelangganPanel extends BasePanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 14);
         panelForm.add(txtNama, gridBagConstraints);
 
+        txtNoHp.setPreferredSize(new java.awt.Dimension(120, 40));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -181,7 +190,8 @@ public class PelangganPanel extends BasePanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 14, 0, 0);
         panelForm.add(txtNoHp, gridBagConstraints);
 
-        lblErrorNama.setText("");
+        lblErrorNama.setFont(lblErrorNama.getFont().deriveFont(lblErrorNama.getFont().getSize()-1f));
+        lblErrorNama.setForeground(new java.awt.Color(168, 50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -189,7 +199,8 @@ public class PelangganPanel extends BasePanel {
         gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 14);
         panelForm.add(lblErrorNama, gridBagConstraints);
 
-        lblErrorNoHp.setText("");
+        lblErrorNoHp.setFont(lblErrorNoHp.getFont().deriveFont(lblErrorNoHp.getFont().getSize()-1f));
+        lblErrorNoHp.setForeground(new java.awt.Color(168, 50, 30));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -198,6 +209,8 @@ public class PelangganPanel extends BasePanel {
         panelForm.add(lblErrorNoHp, gridBagConstraints);
 
         lblAlamat.setText("Alamat / Kos");
+        lblAlamat.setFont(lblAlamat.getFont().deriveFont(lblAlamat.getFont().getStyle() | java.awt.Font.BOLD));
+        lblAlamat.setForeground(new java.awt.Color(74, 86, 93));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -222,7 +235,12 @@ public class PelangganPanel extends BasePanel {
 
         panelTombol.setOpaque(false);
         panelTombol.setLayout(new java.awt.GridBagLayout());
+
         btnSimpan.setText("Simpan");
+        btnSimpan.setBackground(new java.awt.Color(43, 111, 119));
+        btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
+        btnSimpan.setFont(btnSimpan.getFont().deriveFont(btnSimpan.getFont().getStyle() | java.awt.Font.BOLD, btnSimpan.getFont().getSize()+1));
+        btnSimpan.setPreferredSize(new java.awt.Dimension(113, 40));
         btnSimpan.addActionListener(this::btnSimpanActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -230,6 +248,9 @@ public class PelangganPanel extends BasePanel {
         panelTombol.add(btnSimpan, gridBagConstraints);
 
         btnUbah.setText("Ubah");
+        btnUbah.setForeground(new java.awt.Color(30, 42, 49));
+        btnUbah.setFont(btnUbah.getFont().deriveFont(btnUbah.getFont().getStyle() | java.awt.Font.BOLD, btnUbah.getFont().getSize()+1));
+        btnUbah.setPreferredSize(new java.awt.Dimension(100, 40));
         btnUbah.addActionListener(this::btnUbahActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -238,6 +259,11 @@ public class PelangganPanel extends BasePanel {
         panelTombol.add(btnUbah, gridBagConstraints);
 
         btnReset.setText("Reset");
+        btnReset.setForeground(new java.awt.Color(74, 86, 93));
+        btnReset.setBorderPainted(false);
+        btnReset.setContentAreaFilled(false);
+        btnReset.setFont(btnReset.getFont().deriveFont(btnReset.getFont().getStyle() | java.awt.Font.BOLD, btnReset.getFont().getSize()+1));
+        btnReset.setPreferredSize(new java.awt.Dimension(100, 40));
         btnReset.addActionListener(this::btnResetActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -245,7 +271,7 @@ public class PelangganPanel extends BasePanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 12, 0, 0);
         panelTombol.add(btnReset, gridBagConstraints);
 
-        lblSukses.setText("");
+        lblSukses.setForeground(new java.awt.Color(46, 125, 79));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -255,6 +281,9 @@ public class PelangganPanel extends BasePanel {
         panelTombol.add(lblSukses, gridBagConstraints);
 
         btnHapus.setText("Hapus");
+        btnHapus.setForeground(new java.awt.Color(168, 50, 30));
+        btnHapus.setFont(btnHapus.getFont().deriveFont(btnHapus.getFont().getStyle() | java.awt.Font.BOLD, btnHapus.getFont().getSize()+1));
+        btnHapus.setPreferredSize(new java.awt.Dimension(104, 40));
         btnHapus.addActionListener(this::btnHapusActionPerformed);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
@@ -273,12 +302,17 @@ public class PelangganPanel extends BasePanel {
 
         panelTabel.setBackground(new java.awt.Color(255, 255, 255));
         panelTabel.setBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(221, 227, 230), 1, true), javax.swing.BorderFactory.createEmptyBorder(24, 24, 24, 24)));
-        panelTabel.setLayout(new java.awt.BorderLayout(0, 18));
+        panelTabel.setLayout(new java.awt.BorderLayout());
+
         panelAtasTabel.setOpaque(false);
-        panelAtasTabel.setLayout(new java.awt.BorderLayout(0, 0));
+        panelAtasTabel.setLayout(new java.awt.BorderLayout());
+
         lblDaftar.setText("Daftar pelanggan");
+        lblDaftar.setFont(lblDaftar.getFont().deriveFont(lblDaftar.getFont().getStyle() | java.awt.Font.BOLD, lblDaftar.getFont().getSize()+4));
+        lblDaftar.setForeground(new java.awt.Color(30, 42, 49));
         panelAtasTabel.add(lblDaftar, java.awt.BorderLayout.WEST);
 
+        txtCari.setPreferredSize(new java.awt.Dimension(300, 40));
         txtCari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtCariKeyReleased(evt);
@@ -287,6 +321,8 @@ public class PelangganPanel extends BasePanel {
         panelAtasTabel.add(txtCari, java.awt.BorderLayout.EAST);
 
         panelTabel.add(panelAtasTabel, java.awt.BorderLayout.NORTH);
+
+        scrollTabel.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(221, 227, 230), 1, true));
 
         tblPelanggan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -304,6 +340,13 @@ public class PelangganPanel extends BasePanel {
                 return canEdit [columnIndex];
             }
         });
+        tblPelanggan.setFillsViewportHeight(true);
+        tblPelanggan.setGridColor(new java.awt.Color(221, 227, 230));
+        tblPelanggan.setIntercellSpacing(new java.awt.Dimension(0, 1));
+        tblPelanggan.setRowHeight(44);
+        tblPelanggan.setSelectionBackground(new java.awt.Color(227, 241, 242));
+        tblPelanggan.setSelectionForeground(new java.awt.Color(30, 42, 49));
+        tblPelanggan.setShowHorizontalLines(true);
         tblPelanggan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblPelangganMouseClicked(evt);

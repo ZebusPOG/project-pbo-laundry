@@ -34,11 +34,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Aplikasi Laundry Kiloan Jatinangor");
-        getContentPane().setLayout(new java.awt.BorderLayout(0, 0));
+
+        tabUtama.setFont(tabUtama.getFont().deriveFont(tabUtama.getFont().getSize()+2f));
+        tabUtama.setBackground(new java.awt.Color(255, 255, 255));
         tabUtama.addTab("Pelanggan", pelangganPanel);
-
         tabUtama.addTab("Layanan", layananPanel);
-
         tabUtama.addTab("Transaksi", transaksiPanel);
 
         getContentPane().add(tabUtama, java.awt.BorderLayout.CENTER);
