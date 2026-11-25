@@ -2,3 +2,6 @@ target/
 *.class
 tempCodeRunnerFile.java
 .DS_Store
+
+# catatan pribadi presentasi
+CATATAN-PRESENTASI.md
