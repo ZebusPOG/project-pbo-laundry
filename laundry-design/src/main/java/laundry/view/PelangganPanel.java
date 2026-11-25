@@ -20,7 +20,11 @@ public class PelangganPanel extends BasePanel {
     public PelangganPanel() {
         initComponents();
         aturTampilan();
-        loadData();
+        // Jangan akses database saat panel ditampilkan di tab Design NetBeans
+        // (Design view tidak memuat driver MySQL, sehingga muncul error "No suitable driver").
+        if (!java.beans.Beans.isDesignTime()) {
+            loadData();
+        }
     }
 
     /** Mengatur gaya komponen agar sesuai file desain. */
