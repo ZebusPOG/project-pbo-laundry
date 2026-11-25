@@ -253,11 +253,3 @@ PelangganDAO / LayananDAO / TransaksiDAO ──> DatabaseConnection
 
 ---
 
-## 5. Rencana Pengerjaan Berikutnya
-
-| Minggu | Target |
-|--------|--------|
-| 1 (2 - 6 Nov) | Dokumen ide, alur, rancangan database, dan rancangan class (dokumen ini) |
-| 2 | Database + koneksi JDBC + class model + DAO; CRUD Pelanggan dan Layanan jalan |
-| 3 | Panel Transaksi: input order, hitung total, riwayat |
-| 4 | Ubah status, pencarian/filter, validasi input, perapihan tampilan, pengujian |
