@@ -6,6 +6,13 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         tabUtama.setOpaque(true); // strip tab berlatar putih penuh
+        // Polimorfisme: tab yang aktif bisa berupa PelangganPanel, LayananPanel, atau TransaksiPanel.
+        // Semuanya diperlakukan sebagai BasePanel, dan loadData() versi masing-masing dipanggil saat runtime.
+        tabUtama.addChangeListener(e -> {
+            if (tabUtama.getSelectedComponent() instanceof BasePanel panel) {
+                panel.loadData();
+            }
+        });
         setSize(1000, 820);
         setMinimumSize(new java.awt.Dimension(900, 700));
         setLocationRelativeTo(null);

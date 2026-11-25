@@ -2,6 +2,7 @@ package laundry.view;
 
 import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
+import laundry.dao.BaseDAO;
 import laundry.dao.LayananDAO;
 import laundry.dao.TransaksiDAO;
 import laundry.model.Layanan;
@@ -13,7 +14,8 @@ import laundry.util.Format;
  */
 public class LayananPanel extends BasePanel {
 
-    private final LayananDAO layananDAO = new LayananDAO();
+    // Polimorfisme: tipe referensi interface BaseDAO, objek aslinya LayananDAO
+    private final BaseDAO<Layanan> layananDAO = new LayananDAO();
     private final TransaksiDAO transaksiDAO = new TransaksiDAO();
     private int idTerpilih = -1; // id layanan yang diklik di tabel (-1 = belum ada)
 

@@ -3,6 +3,7 @@ package laundry.view;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import laundry.dao.BaseDAO;
 import laundry.dao.LayananDAO;
 import laundry.dao.PelangganDAO;
 import laundry.dao.TransaksiDAO;
@@ -18,8 +19,9 @@ import laundry.util.Format;
  */
 public class TransaksiPanel extends BasePanel {
 
-    private final PelangganDAO pelangganDAO = new PelangganDAO();
-    private final LayananDAO layananDAO = new LayananDAO();
+    // Polimorfisme: tipe referensi interface BaseDAO, objek aslinya PelangganDAO / LayananDAO
+    private final BaseDAO<Pelanggan> pelangganDAO = new PelangganDAO();
+    private final BaseDAO<Layanan> layananDAO = new LayananDAO();
     private final TransaksiDAO transaksiDAO = new TransaksiDAO();
 
     public TransaksiPanel() {
